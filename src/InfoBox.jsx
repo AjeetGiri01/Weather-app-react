@@ -1,0 +1,41 @@
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import "./InfoBox.css";
+import ThunderstormIcon from '@mui/icons-material/Thunderstorm';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import SunnyIcon from '@mui/icons-material/Sunny';
+
+export default function InfoBox({info}) {
+    const INIT_URL = "https://images.unsplash.com/photo-1779141262314-9f96e2fffaf9?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D"
+    const HOT_URL = "https://images.unsplash.com/photo-1524594081293-190a2fe0baae?q=80&w=1176&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D";
+    const COLD_URL = "https://images.unsplash.com/photo-1603726574752-a85dc808deab?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D";
+    const RAIN_URL = "https://images.unsplash.com/photo-1619260584294-8a4e63f5ade5?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=NHwxMjA3fDA%3D";
+
+    return (
+        <div className="InfoBox"> 
+            <div className="cardContainer">
+                <Card sx={{ maxWidth: 345 }}>
+                    <CardMedia
+                        sx={{ height: 140 }}
+                        image={info.humidity > 80 ? RAIN_URL : (info.temp > 18 ? HOT_URL : COLD_URL)}
+                        title="green iguana"
+                    />
+                    <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                            {info.city} {info.humidity > 80 ? <ThunderstormIcon/> : (info.temp > 18 ? <SunnyIcon/> : <AcUnitIcon/>)}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: 'text.secondary' }} component={"span"}>
+                            <p>Temperature = {info.temp}&deg;C </p>
+                            <p>Minimum temp. = {info.tempMin}&deg;C </p>
+                            <p>Maximum temp. = {info.tempMax}&deg;C </p>
+                            <p>The weather feels like {info.feelsLike}&deg;C </p>
+                            <p>Humidity = {info.humidity} </p>
+                        </Typography>
+                    </CardContent>
+                </Card>
+            </div>
+        </div>
+    );
+}

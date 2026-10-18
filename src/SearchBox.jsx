@@ -1,10 +1,14 @@
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import "./SearchBox.css";
 import { useState } from "react";
 
-export default function SearchBox() {
+
+export default function SearchBox({updateInfo}) {
     const [city, setCity] = useState("");
+    let [error, setError] = useState(false);
 
     const API_URL = import.meta.env.VITE_WEATHER_API_URL;
     const API_KEY = import.meta.env.VITE_WEATHER_API_KEY;
@@ -18,13 +22,13 @@ export default function SearchBox() {
             const jsonResponse = await response.json();
 
             if (!response.ok) {
-                console.error("Weather API Error:", jsonResponse.message);
-                return;
+                throw new Error(jsonResponse.message || "City not found");
             }
 
             // console.log("Weather Data:", jsonResponse);
 
             let result = {
+                city: city,
                 temp: jsonResponse.main.temp,
                 tempMin: jsonResponse.main.temp_min,
                 tempMax: jsonResponse.main.temp_max,
@@ -34,9 +38,11 @@ export default function SearchBox() {
             };
 
             console.log(result); 
+            return result;
 
-        } catch (error) {
-            console.error("Failed to fetch weather:", error);
+        } catch (err) {
+            throw err;
+            // console.error("Failed to fetch weather:", error);
         }
     };
 
@@ -44,21 +50,27 @@ export default function SearchBox() {
         setCity(evt.target.value);
     };
 
-    const handleSubmit = (evt) => {
+    const handleSubmit = async (evt) => {
         evt.preventDefault();
 
         if (!city.trim()) {
             return;
         }
 
-        getWeatherInfo(city.trim());
-        setCity("");
+        try {
+            setError(false);
+
+            const newInfo = await getWeatherInfo(city.trim());
+
+            updateInfo(newInfo);
+            setCity("");
+        } catch (err) {
+            setError(true);
+        }
     };
 
     return (
         <div className="SearchBox">
-            <h3>Search for the weather</h3>
-
             <form onSubmit={handleSubmit}>
                 <TextField
                     id="city"
@@ -75,6 +87,7 @@ export default function SearchBox() {
                 <Button variant="contained" type="submit">
                     Search
                 </Button>
+                {error && <div className='err-div'><Stack sx={{ width: '100%' }} spacing={2} style={{alignItems: 'center'}}><Alert severity="error"  >Can't find info of this place!</Alert></Stack></div>}
             </form>
         </div>
     );
