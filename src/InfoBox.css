@@ -6,3 +6,18 @@
     display: flex;
     justify-content: center;
 }
+
+.MuiCard-root {
+    background: linear-gradient(
+        135deg,
+        #ffffff,
+        #e3f2fd,
+        #d1c4e9
+    ) !important;
+
+    border-radius: 20px !important;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2) !important;
+
+    overflow: hidden;
+}
